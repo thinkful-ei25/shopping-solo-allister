@@ -26,7 +26,9 @@ const STORE = {
 		}
 	],
 	hidden: false,
-	filteredItems: []
+	searchTerm: null,
+	searchMatches: []
+	
 
 };
 
@@ -60,14 +62,18 @@ function renderShoppingList() {
 	// Places all shopping items in <ul class="shopping-list js-shopping-list"> 
 	// Joing these together as one long string
 	// insert <li> string inside of the the .js-shopping-list <ul> in the dom
+	
+	let items = STORE.items.slice();
 	if (STORE.hidden) {
-		STORE.filteredItems = STORE.items.slice().filter(item => !item.checked);
-	} else {
-		STORE.filteredItems = STORE.items.slice();
+		items = items.filter(item => !item.checked); 
+	} 
+	if (STORE.searchTerm) {
+		items = STORE.searchMatches;
 	}
 	
+
 	
-	const shoppingListItemString = generateShoppingItemsString(STORE.filteredItems);
+	const shoppingListItemString = generateShoppingItemsString(items);
 	
 	//places shoppingListItemString into the Shopping List <ul>
 	$('.js-shopping-list').html(shoppingListItemString);
@@ -141,28 +147,47 @@ function handleDeletedItems() {
 	console.log('\'handleDeletedItems\' ran');
 }
 
-function hideItems() {
-	if (STORE.hidden) {
-		STORE.filteredItems = STORE.items.slice().filter(item => !item.checked);
-		console.log(STORE.filteredItems);
+//function hideItems() {
+//	if (STORE.hidden) {
+//		STORE.filteredItems = STORE.items.slice().filter(item => !item.checked);
+//		console.log(STORE.filteredItems);
 
-	}
-}
+	
+
 
 function handleHideItems() {
 	$('.hide-items').on('click', function () {
 		STORE.hidden = !STORE.hidden;
 		renderShoppingList();
+		//index issue, incorrect functionality
 	})
 }
+
+function search() {
+	STORE.searchTerm = $('.js-search-box').val();
+	console.log(STORE.searchTerm);
+	$('.js-search-box').val('');
+	STORE.searchMatches = [];
+	for (let obj of STORE.items) {
+		if (obj.name.includes(STORE.searchTerm)) {
+			STORE.searchMatches.push(obj);
+		console.log(STORE.searchMatches);	
+		}	
+		
+	}
+	
+		
+		console.log('');
+	}
+
+
 
 function handleSearch() {
 	$('.js-search-form').submit(function(event) {
 		event.preventDefault();
-		let searchTerm = $('.js-search-box').val();
-		console.log(searchTerm);
-		$('.js-search-box').val('');
-		
+		search();
+		renderShoppingList();
+
 	});
 }
 
