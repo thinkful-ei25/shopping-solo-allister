@@ -28,7 +28,7 @@ const STORE = {
 	hidden: false,
 	searchTerm: null,
 	searchMatches: []
-	
+
 
 };
 
@@ -37,13 +37,17 @@ function generateItemElement(item) {
 	return `
     <li class="js-item-index-element" data-item-index="${itemIndex}">
       <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
-      <div class="shopping-item-controls">
+	
+	  <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
             <span class="button-label">check</span>
         </button>
         <button class="shopping-item-delete js-item-delete">
             <span class="button-label">delete</span>
-        </button>
+		</button>
+		<button class="shopping-item-save js-item-save">
+			<span class="button-label">save</span>
+		</button>
       </div>
     </li>`;
 }
@@ -63,25 +67,25 @@ function renderShoppingList() {
 	// Places all shopping items in <ul class="shopping-list js-shopping-list"> 
 	// Joing these together as one long string
 	// insert <li> string inside of the the .js-shopping-list <ul> in the dom
-	
+
 	let items = STORE.items.slice();
 	if (STORE.hidden) {
-		items = items.filter(item => !item.checked); 
-		
-	} 
+		items = items.filter(item => !item.checked);
+
+	}
 	if (STORE.searchTerm) {
 		items = STORE.searchMatches;
 		if (STORE.hidden) {
 			items = items.filter(item => !item.checked);
 		}
-		}
+	}
 
 
-	
 
-	
+
+
 	const shoppingListItemString = generateShoppingItemsString(items);
-	
+
 	//places shoppingListItemString into the Shopping List <ul>
 	$('.js-shopping-list').html(shoppingListItemString);
 
@@ -115,7 +119,7 @@ function getItemIndexFromElement(item) {
 	const itemIndexString = $(item).closest('.js-item-index-element').attr('data-item-index')
 	console.log(itemIndexString);
 	console.log($(item).closest('.shopping-item-controls').prev().text());
-	
+
 
 	return parseInt(itemIndexString, 10);
 }
@@ -164,7 +168,7 @@ function handleDeletedItems() {
 //		STORE.filteredItems = STORE.items.slice().filter(item => !item.checked);
 //		console.log(STORE.filteredItems);
 
-	
+
 
 
 function handleHideItems() {
@@ -186,19 +190,19 @@ function search() {
 	for (let obj of STORE.items) {
 		if (obj.name.includes(STORE.searchTerm)) {
 			STORE.searchMatches.push(obj);
-		console.log(STORE.searchMatches);	
-		}	
-		
+			console.log(STORE.searchMatches);
+		}
+
 	}
-	
-		
-		console.log('');
-	}
+
+
+	console.log('');
+}
 
 
 
 function handleSearch() {
-	$('.js-search-box').on('keyup', function() {
+	$('.js-search-box').on('keyup', function () {
 		search();
 		renderShoppingList();
 
@@ -206,17 +210,37 @@ function handleSearch() {
 }
 
 function handleSearchButton() {
-	$('.js-search-form').submit(function(event) {
+	$('.js-search-form').submit(function (event) {
 		event.preventDefault();
 	});
 }
 
+
+		
+
+
 function handleEdit() {
-	$('.js-shopping-list').on('click', 'js-shopping-item', function(event) {
+	$('.js-shopping-list').on('click', '.js-shopping-item', function (event) {
+		$(event.target).attr('contenteditable', 'true');
+		handleEditSubmit()
+		
+		});
+		
+	}
+
+	function handleEditSubmit() {
+		$('.js-shopping-list').on('click', '.js-item-save', function (event) {
+			const itemIndex = getItemIndexFromElement(event.target);
+			const editedItem = $(event.target).closest('div').prev().text();
+			console.log(editedItem);
+			STORE.items[itemIndex].name = editedItem;
+			
+			renderShoppingList();
+
+		})};
 	
 
-	});
-}
+
 
 
 function handleShoppingList() {
