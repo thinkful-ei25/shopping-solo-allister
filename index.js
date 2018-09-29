@@ -32,7 +32,8 @@ const STORE = {
 
 };
 
-function generateItemElement(item, itemIndex, template) {
+function generateItemElement(item) {
+	let itemIndex = STORE.items.indexOf(item);
 	return `
     <li class="js-item-index-element" data-item-index="${itemIndex}">
       <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
@@ -66,10 +67,16 @@ function renderShoppingList() {
 	let items = STORE.items.slice();
 	if (STORE.hidden) {
 		items = items.filter(item => !item.checked); 
+		
 	} 
 	if (STORE.searchTerm) {
 		items = STORE.searchMatches;
-	}
+		if (STORE.hidden) {
+			items = items.filter(item => !item.checked);
+		}
+		}
+
+
 	
 
 	
@@ -105,7 +112,11 @@ function handleNewItems() {
 }
 
 function getItemIndexFromElement(item) {
-	const itemIndexString = $(item).closest('.js-item-index-element').attr('data-item-index');
+	const itemIndexString = $(item).closest('.js-item-index-element').attr('data-item-index')
+	console.log(itemIndexString);
+	console.log($(item).closest('.shopping-item-controls').prev().text());
+	
+
 	return parseInt(itemIndexString, 10);
 }
 
@@ -124,6 +135,7 @@ function handleCheckedItems() {
 		const itemIndex = getItemIndexFromElement(event.currentTarget);
 		crossCheckedItems(itemIndex);
 		renderShoppingList();
+		console.log(event.target);
 	});
 	console.log('\'handleCheckedItems\' ran');
 }
@@ -159,14 +171,17 @@ function handleHideItems() {
 	$('.hide-items').on('click', function () {
 		STORE.hidden = !STORE.hidden;
 		renderShoppingList();
+
 		//index issue, incorrect functionality
 	})
 }
 
+
+
+
 function search() {
 	STORE.searchTerm = $('.js-search-box').val();
 	console.log(STORE.searchTerm);
-	$('.js-search-box').val('');
 	STORE.searchMatches = [];
 	for (let obj of STORE.items) {
 		if (obj.name.includes(STORE.searchTerm)) {
@@ -183,10 +198,16 @@ function search() {
 
 
 function handleSearch() {
-	$('.js-search-form').submit(function(event) {
-		event.preventDefault();
+	$('.js-search-box').on('keyup', function() {
 		search();
 		renderShoppingList();
+
+	});
+}
+
+function handleEdit() {
+	$('.js-shopping-list').on('click', 'js-shopping-item', function(event) {
+	
 
 	});
 }
@@ -200,7 +221,7 @@ function handleShoppingList() {
 	handleDeletedItems();
 	handleHideItems();
 	handleSearch();
-
+	handleEdit();
 }
 
 $(handleShoppingList);
