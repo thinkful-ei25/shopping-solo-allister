@@ -28,6 +28,7 @@ const STORE = {
 	hidden: false,
 	searchTerm: null,
 	searchMatches: []
+	
 
 
 };
@@ -222,7 +223,7 @@ function handleSearchButton() {
 function handleEdit() {
 	$('.js-shopping-list').on('click', '.js-shopping-item', function (event) {
 		$(event.target).attr('contenteditable', 'true');
-		handleEditSubmit()
+		handleEditSubmit();
 
 	});
 
@@ -234,8 +235,12 @@ function handleEditSubmit() {
 		const editedItem = $(event.target).closest('div').prev().text();
 		console.log(editedItem);
 		STORE.items[itemIndex].name = editedItem;
-
+		if (STORE.searchTerm) {
+			search();
+		}
 		renderShoppingList();
+		
+		
 
 	})
 };
