@@ -216,29 +216,30 @@ function handleSearchButton() {
 }
 
 
-		
+
 
 
 function handleEdit() {
 	$('.js-shopping-list').on('click', '.js-shopping-item', function (event) {
 		$(event.target).attr('contenteditable', 'true');
 		handleEditSubmit()
-		
-		});
-		
-	}
 
-	function handleEditSubmit() {
-		$('.js-shopping-list').on('click', '.js-item-save', function (event) {
-			const itemIndex = getItemIndexFromElement(event.target);
-			const editedItem = $(event.target).closest('div').prev().text();
-			console.log(editedItem);
-			STORE.items[itemIndex].name = editedItem;
-			
-			renderShoppingList();
+	});
 
-		})};
-	
+}
+
+function handleEditSubmit() {
+	$('.js-shopping-list').on('click', '.js-item-save', function (event) {
+		const itemIndex = getItemIndexFromElement(event.target);
+		const editedItem = $(event.target).closest('div').prev().text();
+		console.log(editedItem);
+		STORE.items[itemIndex].name = editedItem;
+
+		renderShoppingList();
+
+	})
+};
+
 
 
 
