@@ -205,6 +205,12 @@ function handleSearch() {
 	});
 }
 
+function handleSearchButton() {
+	$('.js-search-form').submit(function(event) {
+		event.preventDefault();
+	});
+}
+
 function handleEdit() {
 	$('.js-shopping-list').on('click', 'js-shopping-item', function(event) {
 	
@@ -222,6 +228,7 @@ function handleShoppingList() {
 	handleHideItems();
 	handleSearch();
 	handleEdit();
+	handleSearchButton();
 }
 
 $(handleShoppingList);
