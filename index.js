@@ -27,8 +27,8 @@ const STORE = {
 	],
 	hidden: false,
 	searchTerm: null,
-	searchMatches: []
 	
+
 
 
 };
@@ -75,7 +75,11 @@ function renderShoppingList() {
 
 	}
 	if (STORE.searchTerm) {
-		items = STORE.searchMatches;
+		items = items.filter(item => item.name.includes(STORE.searchTerm))
+		
+		//for (let obj of STORE.items) {
+			//if (obj.name.includes(STORE.searchTerm)) {
+				//STORE.searchMatches.push(obj);
 		if (STORE.hidden) {
 			items = items.filter(item => !item.checked);
 		}
@@ -111,6 +115,9 @@ function handleNewItems() {
 		const newItem = $('.js-shopping-list-entry').val();
 		$('.js-shopping-list-entry').val('');
 		addItemShoppingList(newItem);
+		
+		
+		
 		renderShoppingList();
 	});
 
@@ -184,27 +191,25 @@ function handleHideItems() {
 
 
 
-function search() {
-	STORE.searchTerm = $('.js-search-box').val();
-	console.log(STORE.searchTerm);
-	STORE.searchMatches = [];
-	for (let obj of STORE.items) {
-		if (obj.name.includes(STORE.searchTerm)) {
-			STORE.searchMatches.push(obj);
-			console.log(STORE.searchMatches);
-		}
+//function search() {
+	
+	//console.log(STORE.searchTerm);
+	//STORE.searchMatches = [];
+	
+		//	console.log(STORE.searchMatches);
+		//}
 
-	}
+	//}
 
 
-	console.log('');
-}
+//	console.log('');
+//}
 
 
 
 function handleSearch() {
 	$('.js-search-box').on('keyup', function () {
-		search();
+		STORE.searchTerm = $('.js-search-box').val();
 		renderShoppingList();
 
 	});
@@ -235,15 +240,12 @@ function handleEditSubmit() {
 		const editedItem = $(event.target).closest('div').prev().text();
 		console.log(editedItem);
 		STORE.items[itemIndex].name = editedItem;
-		if (STORE.searchTerm) {
-			search();
-		}
 		renderShoppingList();
-		
-		
 
-	})
-};
+
+
+	});
+}
 
 
 
